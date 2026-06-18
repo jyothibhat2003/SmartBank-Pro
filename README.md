@@ -45,12 +45,194 @@ The Banking Portal API provides a set of endpoints for managing user accounts, f
 - Email trigger on account login
 - Send Bank Statement on Email
 
-## Installation and Setup
+## Complete Local Setup
 
-1. Clone the repository: `git clone https://github.com/yourusername/banking-portal-api.git`
-2. Navigate to the project folder: `cd banking-portal-api`
-3. Configure MySQL: Set up a MySQL database, create a copy of `application.properties.sample`, rename it `application.properties`, and update the properties as needed.
-4. Build and run the project: `mvn spring-boot:run`
+This project is split into two parts:
+
+- Backend: `C:\Users\Admin\Downloads\SmartBank-Pro`
+- Frontend: `C:\Users\Admin\Downloads\BankingPortal-UI`
+
+## Required Installs
+
+1. Install Git: https://git-scm.com/downloads
+2. Install JDK 17 or newer. JDK 17 is recommended, and JDK 23 also works.
+3. Install Node.js. Node 20 LTS is recommended, and Angular 18 works best with Node 18, 20, or 22.
+4. Install VS Code: https://code.visualstudio.com
+
+## VS Code Extensions
+
+Backend:
+
+- Extension Pack for Java
+- Spring Boot Extension Pack
+- Maven for Java
+- Lombok Annotations Support for VS Code
+
+Frontend:
+
+- Angular Language Service
+- ESLint
+- Prettier
+- Tailwind CSS IntelliSense
+
+Optional:
+
+- GitLens
+- Thunder Client or REST Client
+- Docker, if you want MySQL and Redis via Docker
+
+## Backend Setup
+
+Open a terminal and go to the backend folder:
+
+```powershell
+cd C:\Users\Admin\Downloads\SmartBank-Pro
+```
+
+Create the local config file:
+
+```powershell
+Copy-Item src\main\resources\application.properties.sample src\main\resources\application.properties
+```
+
+For the easiest local run, update `src/main/resources/application.properties` with this H2 config:
+
+```properties
+server.port=8180
+
+spring.datasource.url=jdbc:h2:file:./data/bankingapp;MODE=MySQL;DATABASE_TO_LOWER=TRUE;NON_KEYWORDS=USER;DB_CLOSE_DELAY=-1
+spring.datasource.username=sa
+spring.datasource.password=
+spring.datasource.driver-class-name=org.h2.Driver
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.jpa.generate-ddl=true
+spring.jpa.show-sql=false
+spring.jpa.hibernate.ddl-auto=update
+spring.main.allow-circular-references=true
+server.error.include-message=always
+spring.h2.console.enabled=true
+management.health.redis.enabled=false
+
+jwt.secret=VGhpcy1pcy1hLWxvY2FsLWRldi1zZWNyZXQtdGhhdC1pcy1sb25nLWVub3VnaC1mb3ItSFMyNTYtYW5kLUhTNTEyLXRva2Vucy0xMjM0NTY3ODkw
+jwt.expiration=86400000
+jwt.header=Authorization
+jwt.prefix=Bearer
+
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=example@gmail.com
+spring.mail.password=dummy-password
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+geo.api.url=https://api.findip.net/
+geo.api.key=your-api-key
+```
+
+Run the backend:
+
+```powershell
+.\mvnw.cmd spring-boot:run
+```
+
+Backend URL:
+
+```text
+http://localhost:8180
+```
+
+Swagger UI:
+
+```text
+http://localhost:8180/swagger-ui/index.html
+```
+
+## Frontend Setup
+
+Open a second PowerShell window and go to the frontend folder:
+
+```powershell
+cd C:\Users\Admin\Downloads\BankingPortal-UI
+npm install
+npm start
+```
+
+Frontend URL:
+
+```text
+http://localhost:4200
+```
+
+The UI is already configured to call:
+
+```text
+http://localhost:8180/api
+```
+
+The frontend config file is:
+
+```text
+BankingPortal-UI/src/environment/environment.ts
+```
+
+It should contain:
+
+```ts
+export const environment = {
+   production: false,
+   apiUrl: 'http://localhost:8180/api',
+   tokenName: 'authToken',
+   origin: 'http://localhost:4200'
+};
+```
+
+## How To Use
+
+1. Start the backend first:
+
+```powershell
+cd C:\Users\Admin\Downloads\SmartBank-Pro
+.\mvnw.cmd spring-boot:run
+```
+
+2. Start the frontend second:
+
+```powershell
+cd C:\Users\Admin\Downloads\BankingPortal-UI
+npm start
+```
+
+3. Open `http://localhost:4200`.
+4. Register a new user.
+5. Log in.
+6. Create a PIN.
+7. Use the dashboard, deposit, withdraw, fund transfer, transactions, and profile pages.
+
+## Common Errors
+
+If `JAVA_HOME` is not found:
+
+```powershell
+setx JAVA_HOME "C:\Program Files\Java\jdk-17"
+```
+
+Then reopen the terminal.
+
+If port `8180` is already in use:
+
+```powershell
+netstat -ano | findstr :8180
+Stop-Process -Id PID_NUMBER -Force
+```
+
+If port `4200` is already in use:
+
+```powershell
+netstat -ano | findstr :4200
+Stop-Process -Id PID_NUMBER -Force
+```
+
+If login says user not found, register first. The login identifier is either email or account number.
 
 ## Screenshots
 
