@@ -45,6 +45,7 @@ application-*.properties
 application-*.yml
 
 # Database
+data/
 *.h2.db
 *.mv.db
 

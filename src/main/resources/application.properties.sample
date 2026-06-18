@@ -13,7 +13,7 @@ spring.main.allow-circular-references=true
 server.error.include-message=always
 
 # JWT
-jwt.secret=your-secret-key
+jwt.secret=U21hcnRCYW5rLVByby1sb2NhbC1kZXZlbG9wbWVudC1zZWNyZXQta2V5LTEyMzQ1Njc4OTAtYWJjZGVmZ2hpamtsbW5vcA==
 # Token expiration time in milliseconds (e.g., 24 hours)
 jwt.expiration=86400000
 jwt.header=Authorization

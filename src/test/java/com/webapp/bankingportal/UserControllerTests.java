@@ -1,5 +1,7 @@
 package com.webapp.bankingportal;
 
+import java.util.Arrays;
+
 import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -498,7 +500,18 @@ public class UserControllerTests extends BaseTest {
                         .string(String.format(ApiMessages.OTP_SENT_SUCCESS.getMessage(), user.getEmail())));
 
         val receivedMessages = GreenMailJavaMailSender.getReceivedMessagesForDomain(user.getEmail());
-        val otpVerificationRequest = new OtpVerificationRequest(accountNumber, getOtpFromEmail(receivedMessages[0]));
+        val otp = Arrays.stream(receivedMessages)
+                .map(message -> {
+                    try {
+                        return getOtpFromEmail(message);
+                    } catch (Exception e) {
+                        return null;
+                    }
+                })
+                .filter(foundOtp -> foundOtp != null)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("OTP not found in email"));
+        val otpVerificationRequest = new OtpVerificationRequest(accountNumber, otp);
 
         val loginResult = mockMvc.perform(MockMvcRequestBuilders
                 .post("/api/users/verify-otp")
